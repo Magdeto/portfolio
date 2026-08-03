@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import ImagePlaceholder from '../components/ImagePlaceholder'
 import { projects } from '../data/projects'
 import { FONT_UNBOUNDED } from '../styles/typography'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 const EASE = 'cubic-bezier(0.8, 0, 0.6, 1)' // "easy ease"
 
@@ -23,15 +24,17 @@ type IntroPhase = 'white' | 'textIn' | 'curtain' | 'stars' | 'done'
 // Intro timing (ms)
 const WHITE_HOLD = 800
 const TEXT_IN_DURATION = 1000
-const CURTAIN_DURATION = 3000 // full sweep: below viewport -> covers -> above viewport
+const CURTAIN_DURATION = 1800 // full sweep: below viewport -> covers -> above viewport
 const REVEAL_DELAY = CURTAIN_DURATION / 2 // when the curtain reaches full coverage and starts uncovering
 const STAR_DURATION = 1400
+const STAR_EARLY_OFFSET = 500 // stars start this much before the curtain sweep finishes
 
 const T_TEXT_IN = WHITE_HOLD // 1000
-const T_CURTAIN = T_TEXT_IN + TEXT_IN_DURATION // 2750
-const T_REVEAL = T_CURTAIN + REVEAL_DELAY // 3900 — curtain fully covers here, then starts revealing
-const T_STARS = T_CURTAIN + CURTAIN_DURATION // 5050
-const T_DONE = T_STARS + STAR_DURATION // 6450
+const T_CURTAIN = T_TEXT_IN + TEXT_IN_DURATION // 1800
+const T_REVEAL = T_CURTAIN + REVEAL_DELAY // curtain fully covers here, then starts revealing
+const T_STARS = T_CURTAIN + CURTAIN_DURATION // overlay unmounts once the sweep visually finishes
+const T_STARS_GO = T_STARS - STAR_EARLY_OFFSET // stars actually start drawing a bit before that
+const T_DONE = T_STARS + STAR_DURATION
 
 // Per-line stagger for the black->white flip, top line first (matches the cover rectangle contracting top-down)
 const LINE_COLOR_DURATION = 400
@@ -54,6 +57,8 @@ function heroLineInnerStyle(linesIn: boolean, white: boolean, colorDelay: number
 }
 
 export default function HomePage() {
+  useDocumentTitle('Magda Tsekova — Media Designer')
+
   const workSectionRef = useRef<HTMLElement>(null)
   const workTrackRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
@@ -76,6 +81,8 @@ export default function HomePage() {
   }, [introPhase])
   // Flips once the curtain has reached full coverage and starts uncovering the page underneath
   const [revealed, setRevealed] = useState(false)
+  // Flips a little before the curtain sweep visually finishes, kicking off the star draw-in early
+  const [starsGo, setStarsGo] = useState(false)
   // Distance from the document top to the dark wrapper's own top edge (i.e. header + hero height)
   const [coverExtra, setCoverExtra] = useState(0)
 
@@ -91,6 +98,7 @@ export default function HomePage() {
       setTimeout(() => setIntroPhase('textIn'), T_TEXT_IN),
       setTimeout(() => setIntroPhase('curtain'), T_CURTAIN),
       setTimeout(() => setRevealed(true), T_REVEAL),
+      setTimeout(() => setStarsGo(true), T_STARS_GO),
       setTimeout(() => setIntroPhase('stars'), T_STARS),
       setTimeout(() => setIntroPhase('done'), T_DONE),
     ]
@@ -111,11 +119,11 @@ export default function HomePage() {
         path.style.strokeDashoffset = `${len}`
         path.style.transition = `stroke-dashoffset ${STAR_DURATION}ms ${EASE} ${delay}ms`
       }
-      if (introPhase === 'stars' || introPhase === 'done') {
+      if (starsGo) {
         path.style.strokeDashoffset = '0'
       }
     })
-  }, [introPhase])
+  }, [starsGo])
 
   useEffect(() => {
     function updateWork() {
@@ -124,7 +132,7 @@ export default function HomePage() {
       if (!sec || !track) return
       const total = sec.offsetHeight - window.innerHeight
       const scrolled = Math.min(Math.max(-sec.getBoundingClientRect().top, 0), total)
-      const deadZone = 0.2
+      const deadZone = 0.12
       const activeStart = total * deadZone
       const activeEnd = total * (1 - deadZone)
       const activeRange = activeEnd - activeStart
@@ -165,9 +173,9 @@ export default function HomePage() {
       const heroHeight = hero.offsetHeight
       const aboutHeight = about.offsetHeight
 
-      const start1 = heroDocTop + 0.9 * heroHeight // 90% through Hero -> starts fading toward white early
+      const start1 = heroDocTop + 0.5 * heroHeight // 60% through Hero -> starts fading toward white early
       const end1 = targetDocBottom - window.innerHeight // title + Power Twenties block fully in view -> 100% white
-      const start2 = aboutDocTop + 0.9 * aboutHeight // 90% through About -> starts fading back to black early
+      const start2 = aboutDocTop + 0.5 * aboutHeight // 60% through About -> starts fading back to black early
       const end2 = workDocTop // Featured Work's top reaches the viewport top (carousel engaged) -> 100% black
 
       const p1 = end1 > start1 ? clamp01((scrollY - start1) / (end1 - start1)) : 1
@@ -246,7 +254,8 @@ export default function HomePage() {
               I'm
             </span>
           </span>
-          <span style={heroLineWrapperStyle}>
+          {/* Extra bottom padding so the "g" descender isn't clipped by the mask wrapper */}
+          <span style={{ ...heroLineWrapperStyle, paddingBottom: '0.18em' }}>
             <span
               ref={(el) => { heroLineRefs.current[1] = el }}
               style={{

@@ -31,9 +31,9 @@ export default function Header() {
           letterSpacing: '0.01em',
         }}
       >
-        <Link to="/work">Visual Work</Link>
-        <a href="#">CV</a>
-        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+        <Link to="/visual-work" className="nav-link">Visual Work</Link>
+        <a href="#" className="nav-link">CV</a>
+        <a href="www.linkedin.com/in/magda-tsekova" target="_blank" rel="noopener noreferrer" className="nav-link">
           LinkedIn
         </a>
       </nav>

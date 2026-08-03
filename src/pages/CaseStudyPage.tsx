@@ -2,10 +2,13 @@ import { useParams, Navigate } from 'react-router-dom'
 import Footer from '../components/Footer'
 import ImagePlaceholder from '../components/ImagePlaceholder'
 import { caseStudyData } from '../data/projects'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export default function CaseStudyPage() {
   const { slug } = useParams<{ slug: string }>()
   const data = slug ? caseStudyData[slug] : undefined
+
+  useDocumentTitle(data ? `${data.heroTitle} — Magda Tsekova` : 'Magda Tsekova')
 
   if (!data) return <Navigate to="/" replace />
 
