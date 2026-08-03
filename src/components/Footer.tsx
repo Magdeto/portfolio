@@ -1,4 +1,8 @@
+import { useIsMobile } from '../hooks/useIsMobile'
+
 export default function Footer() {
+  const isMobile = useIsMobile()
+
   return (
     <footer
       style={{
@@ -6,9 +10,11 @@ export default function Footer() {
         background: '#ffffff',
         color: '#000000',
         minHeight: '100vh',
-        padding: '56px 44px 26px',
+        padding: isMobile ? '48px 24px 26px' : '56px 44px 26px',
         display: 'flex',
         flexDirection: 'column',
+        alignItems: isMobile ? 'center' : 'stretch',
+        textAlign: isMobile ? 'center' : 'left',
       }}
     >
       <h2
@@ -16,20 +22,20 @@ export default function Footer() {
           margin: 0,
           fontWeight: 700,
           letterSpacing: '-0.02em',
-          lineHeight: 1.6,
-          fontSize: 'clamp(80px, 10vw, 180px)',
+          lineHeight: 1.15,
+          fontSize: isMobile ? 'clamp(34px, 11vw, 60px)' : 'clamp(80px, 10vw, 180px)',
         }}
       >
         Let's Work Together
       </h2>
 
-      <hr style={{ border: 'none', borderTop: '1px solid #000000', margin: '26px 0 0' }} />
+      <hr style={{ border: 'none', borderTop: '1px solid #000000', margin: '26px 0 0', width: '100%' }} />
 
       <div style={{ flex: 1, padding: '48px 0 0' }}>
         <p
           style={{
             margin: 0,
-            fontSize: 'clamp(60px, 4.4vw, 73px)',
+            fontSize: isMobile ? 'clamp(30px, 9vw, 73px)' : 'clamp(60px, 4.4vw, 73px)',
             fontWeight: 700,
             letterSpacing: '-0.01em',
           }}
@@ -38,12 +44,12 @@ export default function Footer() {
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 32 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'center' : 'stretch', gap: 20, marginBottom: 32 }}>
         <a
           href="mailto:mcekova48@gmail.com"
           style={{
             color: '#000000',
-            fontSize: 'clamp(22px, 2.4vw, 34px)',
+            fontSize: isMobile ? 'clamp(16px, 5vw, 34px)' : 'clamp(22px, 2.4vw, 34px)',
             fontWeight: 700,
             letterSpacing: '-0.01em',
             textDecoration: 'none',
@@ -56,7 +62,7 @@ export default function Footer() {
           href="tel:+359878804121"
           style={{
             color: '#000000',
-            fontSize: 'clamp(22px, 2.4vw, 34px)',
+            fontSize: isMobile ? 'clamp(16px, 5vw, 34px)' : 'clamp(22px, 2.4vw, 34px)',
             fontWeight: 700,
             letterSpacing: '-0.01em',
             textDecoration: 'none',

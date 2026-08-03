@@ -1,5 +1,6 @@
 import ImagePlaceholder from '../components/ImagePlaceholder'
 import Footer from '../components/Footer'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 const imgStyle: React.CSSProperties = {
   width: '100%',
@@ -28,6 +29,8 @@ function Row({ height, children }: { height: string | number; children: React.Re
 }
 
 export default function FeaturedWorkPage() {
+  useDocumentTitle('Visual Work — Magda Tsekova')
+
   return (
     <main>
       {/* Header quote */}

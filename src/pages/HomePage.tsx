@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Footer from '../components/Footer'
 import ImagePlaceholder from '../components/ImagePlaceholder'
-import { projects } from '../data/projects'
+import { projects, type Project } from '../data/projects'
 import { FONT_UNBOUNDED } from '../styles/typography'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useIsMobile } from '../hooks/useIsMobile'
+import { useInView } from '../hooks/useInView'
 
 const EASE = 'cubic-bezier(0.8, 0, 0.6, 1)' // "easy ease"
 
@@ -56,8 +58,82 @@ function heroLineInnerStyle(linesIn: boolean, white: boolean, colorDelay: number
   }
 }
 
+// Mobile Latest Work card — plain vertical list, gradient/title always visible (no hover on touch),
+// fades in via IntersectionObserver as it scrolls into view.
+function MobileProjectCard({ proj }: { proj: Project }) {
+  const [ref, inView] = useInView<HTMLAnchorElement>(0.15)
+  return (
+    <Link
+      ref={ref}
+      to={`/case/${proj.slug}`}
+      className={`m-fade-item${inView ? ' m-fade-in' : ''}`}
+      style={{
+        position: 'relative',
+        display: 'block',
+        width: '100%',
+        aspectRatio: '4 / 3',
+        overflow: 'hidden',
+        borderRadius: 2,
+        background: '#141414',
+        color: '#ffffff',
+      }}
+    >
+      {proj.coverImage ? (
+        <img
+          src={proj.coverImage}
+          alt={proj.title}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
+      ) : (
+        <ImagePlaceholder label={proj.placeholder} />
+      )}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          background:
+            'linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.05) 30%, rgba(10,10,10,0.96) 100%)',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: 20,
+            right: 20,
+            bottom: 16,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            gap: 12,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: FONT_UNBOUNDED,
+              fontSize: 'clamp(16px, 5vw, 22px)',
+              fontWeight: 800,
+              textTransform: 'uppercase',
+              letterSpacing: '-0.01em',
+              lineHeight: 1.1,
+              color: '#ffffff',
+              textShadow: '0 1px 6px rgba(0,0,0,0.6)',
+            }}
+          >
+            {proj.title}
+          </span>
+          <span style={{ fontSize: 12, color: '#ffffff', whiteSpace: 'nowrap', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+            /{proj.year}
+          </span>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 export default function HomePage() {
   useDocumentTitle('Magda Tsekova — Media Designer')
+  const isMobile = useIsMobile()
 
   const workSectionRef = useRef<HTMLElement>(null)
   const workTrackRef = useRef<HTMLDivElement>(null)
@@ -236,14 +312,11 @@ export default function HomePage() {
       {/* No hardcoded background — folded into the same scroll-driven fade as About (see updateBg). */}
       <section
         ref={heroSectionRef}
-        style={{
-          position: 'relative',
-          padding: '18px 44px 90px',
-          display: 'grid',
-          gridTemplateColumns: '1fr 500px',
-          gap: 56,
-          alignItems: 'end',
-        }}
+        style={
+          isMobile
+            ? { position: 'relative', padding: '14px 20px 60px', display: 'flex', flexDirection: 'column' }
+            : { position: 'relative', padding: '18px 44px 90px', display: 'grid', gridTemplateColumns: '1fr 500px', gap: 56, alignItems: 'end' }
+        }
       >
         <h1 style={{ ...heroH1Style, position: 'relative', zIndex: 9999 }}>
           <span style={heroLineWrapperStyle}>
@@ -285,69 +358,138 @@ export default function HomePage() {
           </span>
         </h1>
 
-        <div style={{ alignSelf: 'start', paddingTop: 24 }}>
-          <div
-            style={{
-              position: 'relative',
-              width: '100%',
-              aspectRatio: '1 / 1',
-              borderRadius: 2,
-              overflow: 'hidden',
-              background: '#141414',
-            }}
-          >
-            <img src="/images/landing.jpeg"
-              alt="Magda"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-               />
-          </div>
-          <p
-            style={{
-              margin: '20px 0 0',
-              fontSize: 17,
-              lineHeight: 1.5,
-              color: '#c9c9c9',
-            }}
-          >
-            Media Designer | UX/UI Designer.
-            <br />
-            <i style={{ fontStyle: 'italic', fontSize: 14, color: '#8f8f8f' }}>
-              *Bulgaria&nbsp;│&nbsp;The Netherlands&nbsp;│&nbsp;USA.
-            </i>
-          </p>
-        </div>
+        {isMobile ? (
+          <>
+            {/* Caption ("Bulgaria | NL | USA") sits between the headline and the image on mobile */}
+            <p
+              style={{
+                margin: '48px 0 0',
+                fontSize: 15,
+                lineHeight: 1.5,
+                color: '#c9c9c9',
+              }}
+            >
+              Media Designer | UX/UI Designer.
+              <br />
+              <i style={{ fontStyle: 'italic', fontSize: 13, color: '#8f8f8f' }}>
+                *Bulgaria&nbsp;│&nbsp;The Netherlands&nbsp;│&nbsp;USA.
+              </i>
+            </p>
 
-        {/* Star — large, straddles the left edge of the portrait */}
-        <svg
-          aria-hidden
-          viewBox="0 0 640 529"
-          style={{ position: 'absolute', top: 0, right: 300, width: 400, pointerEvents: 'none', zIndex: 10, overflow: 'visible' }}
-        >
-          <path
-            ref={star1Ref}
-            d="M259.2,229.13c33.19-48.5,48.09-143.61,48.09-143.61,0,0,15.87,108.71,54.71,135.06,38.84,26.36,140.12,40.01,140.12,40.01,0,0-107.96,27.85-137.67,63.11-29.71,35.26-48.09,143.61-48.09,143.61,0,0-27.52-109.88-54.71-135.06-27.19-25.19-140.12-40.01-140.12-40.01,0,0,104.48-14.6,137.67-63.11Z"
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="13"
-            strokeMiterlimit="10"
-          />
-        </svg>
+            <div
+              style={{
+                marginTop: 24,
+                position: 'relative',
+                width: '100%',
+                aspectRatio: '1 / 1',
+                borderRadius: 2,
+                overflow: 'hidden',
+                background: '#141414',
+              }}
+            >
+              <img src="/images/landing.jpeg"
+                alt="Magda"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                 />
 
-        {/* Star — small, lower and inside the portrait */}
-        <svg
-          aria-hidden
-          viewBox="0 0 640 529"
-          style={{ position: 'absolute', top: 230, right: 520, width: 180, pointerEvents: 'none', zIndex: 10, overflow: 'visible' }}
-        >
-          <path
-            ref={star2Ref}
-            d="M259.2,229.13c33.19-48.5,48.09-143.61,48.09-143.61,0,0,15.87,108.71,54.71,135.06,38.84,26.36,140.12,40.01,140.12,40.01,0,0-107.96,27.85-137.67,63.11-29.71,35.26-48.09,143.61-48.09,143.61,0,0-27.52-109.88-54.71-135.06-27.19-25.19-140.12-40.01-140.12-40.01,0,0,104.48-14.6,137.67-63.11Z"
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="13"
-            strokeMiterlimit="10"
-          />
-        </svg>
+              {/* Stars — shrunk down, stacked on top of the image */}
+              <svg
+                aria-hidden
+                viewBox="0 0 640 529"
+                style={{ position: 'absolute', top: 14, left: 10, width: 76, pointerEvents: 'none', zIndex: 10, overflow: 'visible', transform: 'rotate(45deg)' }}
+              >
+                <path
+                  ref={star1Ref}
+                  d="M259.2,229.13c33.19-48.5,48.09-143.61,48.09-143.61,0,0,15.87,108.71,54.71,135.06,38.84,26.36,140.12,40.01,140.12,40.01,0,0-107.96,27.85-137.67,63.11-29.71,35.26-48.09,143.61-48.09,143.61,0,0-27.52-109.88-54.71-135.06-27.19-25.19-140.12-40.01-140.12-40.01,0,0,104.48-14.6,137.67-63.11Z"
+                  fill="none"
+                  stroke="#ffffff"
+                  strokeWidth="13"
+                  strokeMiterlimit="10"
+                />
+              </svg>
+              <svg
+                aria-hidden
+                viewBox="0 0 640 529"
+                style={{ position: 'absolute', bottom: 20, right: 18, width: 42, pointerEvents: 'none', zIndex: 10, overflow: 'visible', transform: 'rotate(45deg)' }}
+              >
+                <path
+                  ref={star2Ref}
+                  d="M259.2,229.13c33.19-48.5,48.09-143.61,48.09-143.61,0,0,15.87,108.71,54.71,135.06,38.84,26.36,140.12,40.01,140.12,40.01,0,0-107.96,27.85-137.67,63.11-29.71,35.26-48.09,143.61-48.09,143.61,0,0-27.52-109.88-54.71-135.06-27.19-25.19-140.12-40.01-140.12-40.01,0,0,104.48-14.6,137.67-63.11Z"
+                  fill="none"
+                  stroke="#ffffff"
+                  strokeWidth="13"
+                  strokeMiterlimit="10"
+                />
+              </svg>
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ alignSelf: 'start', paddingTop: 24 }}>
+              <div
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  aspectRatio: '1 / 1',
+                  borderRadius: 2,
+                  overflow: 'hidden',
+                  background: '#141414',
+                }}
+              >
+                <img src="/images/landing.jpeg"
+                  alt="Magda"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                   />
+              </div>
+              <p
+                style={{
+                  margin: '20px 0 0',
+                  fontSize: 17,
+                  lineHeight: 1.5,
+                  color: '#c9c9c9',
+                }}
+              >
+                Media Designer | UX/UI Designer.
+                <br />
+                <i style={{ fontStyle: 'italic', fontSize: 14, color: '#8f8f8f' }}>
+                  *Bulgaria&nbsp;│&nbsp;The Netherlands&nbsp;│&nbsp;USA.
+                </i>
+              </p>
+            </div>
+
+            {/* Star — large, straddles the left edge of the portrait */}
+            <svg
+              aria-hidden
+              viewBox="0 0 640 529"
+              style={{ position: 'absolute', top: 0, right: 300, width: 400, pointerEvents: 'none', zIndex: 10, overflow: 'visible' }}
+            >
+              <path
+                ref={star1Ref}
+                d="M259.2,229.13c33.19-48.5,48.09-143.61,48.09-143.61,0,0,15.87,108.71,54.71,135.06,38.84,26.36,140.12,40.01,140.12,40.01,0,0-107.96,27.85-137.67,63.11-29.71,35.26-48.09,143.61-48.09,143.61,0,0-27.52-109.88-54.71-135.06-27.19-25.19-140.12-40.01-140.12-40.01,0,0,104.48-14.6,137.67-63.11Z"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="13"
+                strokeMiterlimit="10"
+              />
+            </svg>
+
+            {/* Star — small, lower and inside the portrait */}
+            <svg
+              aria-hidden
+              viewBox="0 0 640 529"
+              style={{ position: 'absolute', top: 230, right: 520, width: 180, pointerEvents: 'none', zIndex: 10, overflow: 'visible' }}
+            >
+              <path
+                ref={star2Ref}
+                d="M259.2,229.13c33.19-48.5,48.09-143.61,48.09-143.61,0,0,15.87,108.71,54.71,135.06,38.84,26.36,140.12,40.01,140.12,40.01,0,0-107.96,27.85-137.67,63.11-29.71,35.26-48.09,143.61-48.09,143.61,0,0-27.52-109.88-54.71-135.06-27.19-25.19-140.12-40.01-140.12-40.01,0,0,104.48-14.6,137.67-63.11Z"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="13"
+                strokeMiterlimit="10"
+              />
+            </svg>
+          </>
+        )}
       </section>
 
       {/* Persistent dark backdrop spanning About -> end of Featured Work (excludes Footer).
@@ -375,246 +517,343 @@ export default function HomePage() {
           and text colour is driven by the same scroll progress via refs (see updateBg above). */}
       <section
         ref={aboutSectionRef}
-        style={{
-          position: 'relative',
-          minHeight: '150vh',
-          overflow: 'visible',
-          padding: '64px 44px',
-        }}
+        style={
+          isMobile
+            ? { position: 'relative', minHeight: '150vh', overflow: 'visible', padding: '48px 20px 64px' }
+            : { position: 'relative', minHeight: '150vh', overflow: 'visible', padding: '64px 44px' }
+        }
       >
-        <div style={{ paddingRight: 'min(44%, 460px)' }}>
-          {/* Scroll-in spacer — pure lead-in distance so the black->white fade has room to be gradual */}
-          <div aria-hidden style={{ height: '20vh' }} />
+        {isMobile ? (
+          <>
+            {/* Scroll-in spacer — pure lead-in distance so the black->white fade has room to be gradual */}
+            <div aria-hidden style={{ height: '16vh' }} />
 
-          <h2
-            ref={aboutH2Ref}
-            style={{
-              margin: 0,
-              color: '#ffffff',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              lineHeight: 1.02,
-              letterSpacing: '-0.01em',
-              fontSize: 'clamp(30px, 4.2vw, 66px)',
-              maxWidth: 1150,
-              textWrap: 'balance' as React.CSSProperties['textWrap'],
-            }}
-          >
-            Because design is not just about{' '}
-            <span style={{ fontStyle: 'italic' }}>aesthetics</span>&nbsp;- it is about{' '}
-            <span style={{ fontStyle: 'italic' }}>solutions.</span>
-            <span style={{ fontWeight: 200 }}>/</span>
-          </h2>
-
-          <div
-            ref={powerTwentiesRef}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '220px 1fr',
-              gap: 44,
-              marginTop: 300,
-            }}
-          >
-            <p
-              ref={aboutLabelRef}
+            <h2
+              ref={aboutH2Ref}
               style={{
                 margin: 0,
                 color: '#ffffff',
-                fontSize: 15,
-                fontWeight: 500,
-                letterSpacing: '0.06em',
+                fontWeight: 600,
                 textTransform: 'uppercase',
+                lineHeight: 1.05,
+                letterSpacing: '-0.01em',
+                fontSize: 'clamp(28px, 8vw, 40px)',
+                textWrap: 'balance' as React.CSSProperties['textWrap'],
               }}
             >
-              <i>Power Twenties/</i>
-            </p>
-            <p
-              ref={aboutBodyRef}
-              style={{
-                margin: 0,
-                fontSize: 17,
-                lineHeight: 1.5,
-                color: '#ffffff',
-                maxWidth: 520,
-              }}
-            >
-              Born and raised in Bulgaria, now calling Eindhoven home.
-              <br />
-              Keen on technology since I was a child.
-              <br />Photographer, ex-musician and a shy donkey.
-            </p>
-          </div>
-        </div>
+              Because design is not just about{' '}
+              <span style={{ fontStyle: 'italic' }}>aesthetics</span>&nbsp;- it is about{' '}
+              <span style={{ fontStyle: 'italic' }}>solutions.</span>
+              <span style={{ fontWeight: 200 }}>/</span>
+            </h2>
 
-        {/* Portrait — right side, overflows section */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: '3.5%',
-            width: 'min(25%, 400px)',
-            height: '160vh',
-            background: '#141414',
-            overflow: 'hidden',
-            zIndex: 5,
-          }}
-        >
-          <img src="/images/bw about.jpeg"
-              alt="About"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-               />
-        </div>
+            <div ref={powerTwentiesRef} style={{ marginTop: 80 }}>
+              <p
+                ref={aboutLabelRef}
+                style={{
+                  margin: 0,
+                  color: '#ffffff',
+                  fontSize: 13,
+                  fontWeight: 500,
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                <i>Power Twenties/</i>
+              </p>
+              <p
+                ref={aboutBodyRef}
+                style={{
+                  margin: '12px 0 0',
+                  fontSize: 15,
+                  lineHeight: 1.5,
+                  color: '#ffffff',
+                }}
+              >
+                Born and raised in Bulgaria, now calling Eindhoven home.
+                <br />
+                Keen on technology since I was a child.
+                <br />Photographer, ex-musician and a shy donkey.
+              </p>
+            </div>
+
+            {/* Portrait — square, at the bottom */}
+            <div
+              style={{
+                marginTop: 40,
+                width: '100%',
+                aspectRatio: '1 / 1',
+                position: 'relative',
+                overflow: 'hidden',
+                background: '#141414',
+                borderRadius: 2,
+              }}
+            >
+              <img src="/images/bw about.jpeg"
+                  alt="About"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                   />
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ paddingRight: 'min(44%, 460px)' }}>
+              {/* Scroll-in spacer — pure lead-in distance so the black->white fade has room to be gradual */}
+              <div aria-hidden style={{ height: '20vh' }} />
+
+              <h2
+                ref={aboutH2Ref}
+                style={{
+                  margin: 0,
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  lineHeight: 1.02,
+                  letterSpacing: '-0.01em',
+                  fontSize: 'clamp(30px, 4.2vw, 66px)',
+                  maxWidth: 1150,
+                  textWrap: 'balance' as React.CSSProperties['textWrap'],
+                }}
+              >
+                Because design is not just about{' '}
+                <span style={{ fontStyle: 'italic' }}>aesthetics</span>&nbsp;- it is about{' '}
+                <span style={{ fontStyle: 'italic' }}>solutions.</span>
+                <span style={{ fontWeight: 200 }}>/</span>
+              </h2>
+
+              <div
+                ref={powerTwentiesRef}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '220px 1fr',
+                  gap: 44,
+                  marginTop: 300,
+                }}
+              >
+                <p
+                  ref={aboutLabelRef}
+                  style={{
+                    margin: 0,
+                    color: '#ffffff',
+                    fontSize: 15,
+                    fontWeight: 500,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  <i>Power Twenties/</i>
+                </p>
+                <p
+                  ref={aboutBodyRef}
+                  style={{
+                    margin: 0,
+                    fontSize: 17,
+                    lineHeight: 1.5,
+                    color: '#ffffff',
+                    maxWidth: 520,
+                  }}
+                >
+                  Born and raised in Bulgaria, now calling Eindhoven home.
+                  <br />
+                  Keen on technology since I was a child.
+                  <br />Photographer, ex-musician and a shy donkey.
+                </p>
+              </div>
+            </div>
+
+            {/* Portrait — right side, overflows section */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: '3.5%',
+                width: 'min(25%, 400px)',
+                height: '140vh',
+                background: '#141414',
+                overflow: 'hidden',
+                zIndex: 5,
+              }}
+            >
+              <img src="/images/bw about.jpeg"
+                  alt="About"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                   />
+            </div>
+          </>
+        )}
       </section>
 
-      {/* ---- FEATURED WORK (scroll-driven horizontal) ---- */}
+      {/* ---- FEATURED WORK ---- */}
+      {/* Desktop: sticky + scroll-driven horizontal carousel. Mobile: ordinary vertical list, each card fades in on scroll. */}
       <section
         ref={workSectionRef}
         id="work"
-        style={{
-          position: 'relative',
-          height: '360vh',
-        }}
+        style={isMobile ? { position: 'relative', padding: '64px 20px 40px' } : { position: 'relative', height: '360vh' }}
       >
-        <div
-          style={{
-            position: 'sticky',
-            top: 0,
-            height: '100vh',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: 24,
-              flexWrap: 'wrap',
-              padding: '0 44px',
-              marginBottom: 40,
-            }}
-          >
+        {isMobile ? (
+          <>
             <h2
               style={{
-                margin: 0,
+                margin: '0 0 32px',
                 fontStyle: 'italic',
                 fontWeight: 800,
                 textTransform: 'uppercase',
                 letterSpacing: '-0.02em',
                 lineHeight: 0.9,
-                fontSize: 'clamp(40px, 7vw, 108px)',
+                fontSize: 'clamp(36px, 12vw, 56px)',
               }}
             >
               #Latest Work
             </h2>
-          </div>
 
-          <div style={{ overflow: 'hidden' }}>
-            <div
-              ref={workTrackRef}
-              style={{
-                display: 'flex',
-                gap: 24,
-                padding: '0 44px',
-                width: 'max-content',
-                willChange: 'transform',
-              }}
-            >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
               {projects.map((proj) => (
-                <Link
-                  key={proj.slug}
-                  to={`/case/${proj.slug}`}
-                  className="m-tile"
-                  style={{
-                    position: 'relative',
-                    flex: '0 0 auto',
-                    height: 'clamp(360px, 64vh, 620px)',
-                    aspectRatio: '16 / 10',
-                    overflow: 'hidden',
-                    borderRadius: 2,
-                    background: '#141414',
-                    color: '#ffffff',
-                    display: 'block',
-                    cursor: 'none',
-                  }}
-                  onMouseEnter={() => {
-                    if (cursorRef.current) cursorRef.current.style.opacity = '1'
-                  }}
-                  onMouseLeave={() => {
-                    if (cursorRef.current) cursorRef.current.style.opacity = '0'
-                  }}
-                >
-                  {proj.coverImage ? (
-                    <img
-                      src={proj.coverImage}
-                      alt={proj.title}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                    />
-                  ) : (
-                    <ImagePlaceholder label={proj.placeholder} />
-                  )}
-
-                  {/* Gradient + text — fades in together on hover */}
-                  <div
-                    className="m-reveal"
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      pointerEvents: 'none',
-                      background:
-                        'linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.05) 30%, rgba(10,10,10,0.96) 100%)',
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: 'absolute',
-                        left: 30,
-                        right: 30,
-                        bottom: 28,
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-end',
-                        gap: 16,
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: FONT_UNBOUNDED,
-                          fontSize: 'clamp(20px, 2.1vw, 32px)',
-                          fontWeight: 800,
-                          textTransform: 'uppercase',
-                          letterSpacing: '-0.01em',
-                          lineHeight: 1,
-                          color: '#ffffff',
-                          textShadow: '0 1px 6px rgba(0,0,0,0.6)',
-                        }}
-                      >
-                        {proj.title}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: 13,
-                          letterSpacing: '0.06em',
-                          textTransform: 'uppercase',
-                          color: '#ffffff',
-                          textShadow: '0 1px 4px rgba(0,0,0,0.5)',
-                        }}
-                      >
-                        {proj.tags}
-                      </span>
-                      <span style={{ fontSize: 14, color: '#ffffff', whiteSpace: 'nowrap', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
-                        /{proj.year}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+                <MobileProjectCard key={proj.slug} proj={proj} />
               ))}
             </div>
+          </>
+        ) : (
+          <div
+            style={{
+              position: 'sticky',
+              top: 0,
+              height: '100vh',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 24,
+                flexWrap: 'wrap',
+                padding: '0 44px',
+                marginBottom: 40,
+              }}
+            >
+              <h2
+                style={{
+                  margin: 0,
+                  fontStyle: 'italic',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '-0.02em',
+                  lineHeight: 0.9,
+                  fontSize: 'clamp(40px, 7vw, 108px)',
+                }}
+              >
+                #Latest Work
+              </h2>
+            </div>
+
+            <div style={{ overflow: 'hidden' }}>
+              <div
+                ref={workTrackRef}
+                style={{
+                  display: 'flex',
+                  gap: 24,
+                  padding: '0 44px',
+                  width: 'max-content',
+                  willChange: 'transform',
+                }}
+              >
+                {projects.map((proj) => (
+                  <Link
+                    key={proj.slug}
+                    to={`/case/${proj.slug}`}
+                    className="m-tile"
+                    style={{
+                      position: 'relative',
+                      flex: '0 0 auto',
+                      height: 'clamp(360px, 64vh, 620px)',
+                      aspectRatio: '16 / 10',
+                      overflow: 'hidden',
+                      borderRadius: 2,
+                      background: '#141414',
+                      color: '#ffffff',
+                      display: 'block',
+                      cursor: 'none',
+                    }}
+                    onMouseEnter={() => {
+                      if (cursorRef.current) cursorRef.current.style.opacity = '1'
+                    }}
+                    onMouseLeave={() => {
+                      if (cursorRef.current) cursorRef.current.style.opacity = '0'
+                    }}
+                  >
+                    {proj.coverImage ? (
+                      <img
+                        src={proj.coverImage}
+                        alt={proj.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      />
+                    ) : (
+                      <ImagePlaceholder label={proj.placeholder} />
+                    )}
+
+                    {/* Gradient + text — fades in together on hover */}
+                    <div
+                      className="m-reveal"
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        pointerEvents: 'none',
+                        background:
+                          'linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.05) 30%, rgba(10,10,10,0.96) 100%)',
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: 30,
+                          right: 30,
+                          bottom: 28,
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'flex-end',
+                          gap: 16,
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: FONT_UNBOUNDED,
+                            fontSize: 'clamp(20px, 2.1vw, 32px)',
+                            fontWeight: 800,
+                            textTransform: 'uppercase',
+                            letterSpacing: '-0.01em',
+                            lineHeight: 1,
+                            color: '#ffffff',
+                            textShadow: '0 1px 6px rgba(0,0,0,0.6)',
+                          }}
+                        >
+                          {proj.title}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 13,
+                            letterSpacing: '0.06em',
+                            textTransform: 'uppercase',
+                            color: '#ffffff',
+                            textShadow: '0 1px 4px rgba(0,0,0,0.5)',
+                          }}
+                        >
+                          {proj.tags}
+                        </span>
+                        <span style={{ fontSize: 14, color: '#ffffff', whiteSpace: 'nowrap', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+                          /{proj.year}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </section>
       </div>
 
