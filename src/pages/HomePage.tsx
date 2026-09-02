@@ -17,7 +17,7 @@ const heroH1Style: React.CSSProperties = {
   textTransform: 'uppercase',
   lineHeight: 1,
   letterSpacing: '-0.03em',
-  fontSize: 'clamp(50px, 11vw, 180px)',
+  fontSize: 'clamp(60px, 11vw, 180px)',
 }
 
 // 1. white — blank hold  2. textIn — black lines slide up  3. curtain — one sweep covers then reveals page (text turns white as it passes)  4. stars — draw in last
@@ -328,7 +328,7 @@ export default function HomePage() {
             </span>
           </span>
           {/* Extra bottom padding so the "g" descender isn't clipped by the mask wrapper */}
-          <span style={{ ...heroLineWrapperStyle, paddingBottom: '0.18em' }}>
+          <span style={{ ...heroLineWrapperStyle, paddingBottom: '0.11em' }}>
             <span
               ref={(el) => { heroLineRefs.current[1] = el }}
               style={{
@@ -363,7 +363,7 @@ export default function HomePage() {
             {/* Caption ("Bulgaria | NL | USA") sits between the headline and the image on mobile */}
             <p
               style={{
-                margin: '48px 0 0',
+                margin: '60px 0 0',
                 fontSize: 15,
                 lineHeight: 1.5,
                 color: '#c9c9c9',
@@ -565,7 +565,7 @@ export default function HomePage() {
                 ref={aboutBodyRef}
                 style={{
                   margin: '12px 0 0',
-                  fontSize: 15,
+                  fontSize: 13,
                   lineHeight: 1.5,
                   color: '#ffffff',
                 }}

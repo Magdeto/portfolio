@@ -10,13 +10,15 @@ export interface Project {
 export interface CaseSection {
   label: string
   body: string
+  sectionImage?: string
+  subtitle?: string
 }
 
 export interface CaseScreen {
   title: string
   text: string
   placeholder: string
-  image?: string // ← add '/images/your-screen.png' here
+  image?: string // 
 }
 
 export interface CaseStudyData {
@@ -57,9 +59,10 @@ export const projects: Project[] = [
   {
     slug: 'vr-learning',
     title: 'Multiplayer VR Learning',
-    tags: 'Front-end · Prototyping',
+    tags: 'Game Design · Prototyping · Virtual Reality',
     year: '2026',
-    placeholder: 'VR Learning cover',
+    placeholder: 'VR Learning Cover',
+    coverImage: '/images/VR-Cover.png'
   },
   {
     slug: 'data-visualization',
@@ -97,7 +100,8 @@ export const caseStudyData: Record<string, CaseStudyData> = {
       },
       {
         label: 'Research',
-        body: 'We ran interviews (in Dutch, since the target group is Dutch-speaking children) and built an empathy map to get past assumptions. Two findings drove the whole design direction:\n\n• Kids in this age group can reliably type, so any product asking them to type would fail before it started\n• Existing kids\' apps that worked shared four things: dead-simple navigation, oversized touch targets, voice-over narration, and unmistakable feedback when something\'s tapped',
+        body: 'We ran interviews with both out primary and secondary target audiences - children and parents - to understand what exactly kids do on their phones, what is their screentime limit (if such) generally understand the interaction model of a child with their phone. As a result, I built an empathy map to get past assumptions. Two findings drove the whole design direction:\n\n• Kids in this age group can reliably type, so any product asking them to type would fail before it started\n• Existing kids\' apps that worked shared four things: dead-simple navigation, oversized touch targets, voice-over narration, and unmistakable feedback when something\'s tapped',
+        sectionImage: '/images/HMW-ArtDetective.png',
       },
       {
         label: 'Process',
@@ -155,83 +159,77 @@ export const caseStudyData: Record<string, CaseStudyData> = {
     sections: [
       {
         label: 'Context',
-        body: 'Replace with your context text.',
+        body: 'Assigned as a short sprint project. The task: design a mobile iOS app that lets users identify and learn about artworks using image recognition - essentially Shazam for art. A 2-week rapid sprint covering brainstorming, prototyping, and development. The goal was a working core concept, no add-on features. The result: Rijksmuseum Art Detective. Designed for adolescents, specifically to bridge the gap in art history knowledge by making museum exploration feel like a social-media experience they are already familiar with. The app is built for use in crowded spaces like museum floors, so speed and simplicity mattered more than depth',
       },
       {
         label: 'Research',
-        body: 'Replace with your research text.',
+        body: 'Mapped the competitive landscape, including AR/VR apps, virtual museum tours, and web-based applications, to identify gaps and overlaps. In parallel, ran "How Might We" workshops to reframe the problem around technical constraints, legal considerations, and creative direction.',
+        sectionImage: '/images/HMW-ArtDetective.png'
       },
       {
         label: 'Process',
-        body: 'Replace with your process text.',
-      },
-      {
-        label: 'Key Decisions',
-        body: 'Replace with your key decisions text.',
+        body: 'Started with sketches and lo-fi wireframes to lock the basic layout before development. Once the structure was solidified, I moved into visual design.',
+        sectionImage: '/images/ArtDetectiveLoFi.png'
       },
       {
         label: 'Outcome / Reflection',
-        body: 'Replace with your outcome / reflection text.',
+        body: 'Shipped a working MVP with three core screens: Homescreen, Scanner, and an info overlay for the scanned artwork. Tested with university students with no navigation issues found. The concept held up well as a proof-of-concept. With more time, I\'d push the social-media angle further, something like a face-swap feature layered onto scanned artworks, turning a museum visit into something you experience and share with a friend in real time, rather than a solo scan-and-read loop.',
       },
     ],
     screens: [
       {
-        title: 'Home Feed',
-        text: 'Replace with screen description.',
+        title: 'Welcome Screen',
+        text: 'General overview about the painting includign Year, Artist and Title.',
         placeholder: 'Art Detective — Screen 1',
-        image: '', // ← '/images/art-detective-screen-1.png'
+        image: '/images/WelcomeScreen.png'
       },
       {
-        title: 'Artwork Detail',
-        text: 'Replace with screen description.',
+        title: 'Home Screen',
+        text: 'Home Screen with highlighed artists and instand Call-To-Action button to scan and personalized Welcome message',
         placeholder: 'Art Detective — Screen 2',
-        image: '', // ← '/images/art-detective-screen-2.png'
+        image: '/images/Homescreen.png'
       },
       {
-        title: 'Quiz / Challenge',
-        text: 'Replace with screen description.',
+        title: 'Scan in progress',
+        text: 'Scanner screen with bouding box as a cue.',
         placeholder: 'Art Detective — Screen 3',
-        image: '', // ← '/images/art-detective-screen-3.png'
+        image: '/images/Scanner.png'
       },
       {
-        title: 'Profile / Progress',
-        text: 'Replace with screen description.',
+        title: 'Overlay Opened',
+        text: 'General overview about the painting includign Year, Artist and Title.',
         placeholder: 'Art Detective — Screen 4',
-        image: '', // ← '/images/art-detective-screen-4.png'
+        image: '/images/overlay.png'
       },
     ],
     bullets: [
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
     ],
   },
 
   // ── Multiplayer VR Learning ──────────────────────────────────────────────
   'vr-learning': {
-    heroLabels: ['Front-end', 'Prototyping'],
+    heroLabels: ['User Research', 'Prototyping', 'Virtual Reality'],
     heroTitle: 'Multiplayer VR Learning on the Construction Site',
-    role: 'Front-end & Prototyping',
-    team: 'Replace with team.',
-    year: '2023',
+    role: 'User Experience and Research, VR Interface Designer',
+    team: 'Back-end and Full-Stack Engineers, in collaboration with Heijmans.',
+    showcaseImage: '/images/HeijmansDemo (2).png',
+    year: '2026',
     intro: [
-      'Replace with project intro paragraph.',
-      'Replace with second intro paragraph.',
+      'A project focused on fostering on-time, safe and mutual communication between construction workers on site. The task sounded simple: "How can we stimulate speaking up to prevent accidents...but in VR.',
     ],
     sections: [
       {
         label: 'Context',
-        body: 'Replace with your context text.',
+        body: 'Communication is important on the jobsite, especially for preventing dangerous accidents from happening. But communication within the team is difficult, especially with cultural differences. This may relate to hierarchy, uncertainty, social pressure or simply a lack of practice. This project is used as a proof-of-concept to test if there is a way to encourage coworkers to communicate despite those hurdles.',
       },
       {
         label: 'Research',
-        body: 'Replace with your research text.',
+        body: 'Started from a behavioral research report on Dutch and international construction workers (CBS, TNO, Bouwend Nederland), which gave me early insight on motivation, risk attitude, digital literacy, and hierarchy across worker types. Validated those hypotheses with an expert interview with a safety coordinator at Heijmans. He confirmed: subcontractors feel disconnected from the core team, fear of being called a "zeikerd" (crybabies) stops people from speaking up\, language barriers with foreign workers are a live problem, and how you address someone changes whether safety messaging actually lands.Combined both inputs into three personas:\n Jan de Vries - veteran Dutch foreman, 47, direct Heijmans employee, informal norm-setter on site \n Daan Visser - Dutch newcomer, 22, 4 months in, MBO Bouw background, mirrors senior behavior to earn acceptance \n ' 
       },
       {
-        label: 'Process',
-        body: 'Replace with your process text.',
+        label: 'Research Questions',
+        subtitle: 'What factors influence construction workers\' willingness to speak up on a construction site?',
+        body:'  How can different accidents happen on a construction site?How are the safety issues currently addressed on the Heijmans sites? How are the safety issues currently addressed at competitors? What multiplayer framework is best for easily setting up VR multiplayer games in Unity?',
       },
       {
         label: 'Key Decisions',
@@ -240,6 +238,7 @@ export const caseStudyData: Record<string, CaseStudyData> = {
       {
         label: 'Outcome / Reflection',
         body: 'Replace with your outcome / reflection text.',
+        sectionImage: '/images/HeijmansDemo (1).png'
       },
     ],
     screens: [
@@ -247,7 +246,7 @@ export const caseStudyData: Record<string, CaseStudyData> = {
         title: 'Environment Overview',
         text: 'Replace with screen description.',
         placeholder: 'VR Learning — Screen 1',
-        image: '', // ← '/images/vr-screen-1.png'
+        image: 'images/HeijmansDemo (2).png'
       },
       {
         title: 'Multiplayer Interaction',
@@ -269,11 +268,6 @@ export const caseStudyData: Record<string, CaseStudyData> = {
       },
     ],
     bullets: [
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
     ],
   },
 

@@ -211,66 +211,86 @@ export default function CaseStudyPage() {
         )}
       </section>
 
-      {/* Project sections — mobile: each one takes the full screen, title top, copy right under */}
-      <section className="cs-padded" style={{}}>
-        {data.sections.map((sec) =>
-          isMobile ? (
-            <div
-              key={sec.label}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '28px 0',
-                borderTop: '1px solid #1c1c1c',
-              }}
-            >
-              <h3
-                style={{
-                  margin: '0 0 14px',
-                  fontSize: 17,
-                  fontWeight: 500,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                  color: '#ffffff',
-                }}
-              >
-                {sec.label}
-              </h3>
-              <p style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: '#c2c2c2' }}>
-                {sec.body}
-              </p>
-            </div>
-          ) : (
-            <div
-              key={sec.label}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '300px 1fr',
-                gap: 300,
-                alignItems: 'start',
-                padding: '44px 0',
-                borderTop: '1px solid #1c1c1c',
-              }}
-            >
-              <h3
-                style={{
-                  margin: 0,
-                  fontSize: 28,
-                  fontWeight: 500,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                  color: '#ffffff',
-                }}
-              >
-                {sec.label}
-              </h3>
-              <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6, color: '#c2c2c2' }}>
-                {sec.body}
-              </p>
-            </div>
-          )
+{/* Project sections — mobile: each one takes the full screen, title top, copy right under */}
+<section className="cs-padded" style={{}}>
+  {data.sections.map((sec) =>
+    isMobile ? (
+      <div
+        key={sec.label}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '28px 0',
+          borderTop: '1px solid #1c1c1c',
+        }}
+      >
+        <h3
+          style={{
+            margin: '0 0 14px',
+            fontSize: 17,
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+            color: '#ffffff',
+          }}
+        >
+          {sec.label}
+        </h3>
+        <p style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: '#c2c2c2' }}>
+          {sec.body}
+        </p>
+        {sec.sectionImage && (
+          <div style={{ width: '100%', marginTop: 20 }}>
+            <img
+              src={sec.sectionImage}
+              alt={sec.label}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+          </div>
         )}
-      </section>
+      </div>
+    ) : (
+      <div
+        key={sec.label}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '300px 1fr',
+          gap: 300,
+          alignItems: 'start',
+          padding: '44px 0',
+          borderTop: '1px solid #1c1c1c',
+        }}
+      >
+        <h3
+          style={{
+            margin: 0,
+            fontSize: 28,
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+            color: '#ffffff',
+          }}
+        >
+          {sec.label}
+        </h3>
+        <div>
+          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6, color: '#c2c2c2' }}>
+            {sec.body}
+          </p>
+          {sec.sectionImage && (
+            <div style={{ width: '100%', marginTop: 32 }}>
+              <img
+                src={sec.sectionImage}
+                alt={sec.label}
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  )}
+</section>
 
       {/* Phone screens showcase */}
       {isMobile ? (
