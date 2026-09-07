@@ -7,11 +7,37 @@ export interface Project {
   coverImage?: string
 }
 
+export interface Subsection {
+  subtitle?: string
+  subtitleSecondary?: string
+  subtitleBody?: string
+  subtitleBullets?: string[]
+
+}
+
 export interface CaseSection {
   label: string
   body: string
   sectionImage?: string
-  subtitle?: string
+  subsections?: Subsection[]
+  personas?: Persona[]
+  personaColor?: string
+  FindingColor?: string
+  highlight?: string
+  findings?: Finding[]
+}
+
+export interface Persona {
+  name: string
+  meta: string
+  description: string
+  image?: string
+}
+
+export interface Finding {
+  number: string
+  title: string
+  body: string
 }
 
 export interface CaseScreen {
@@ -31,8 +57,10 @@ export interface CaseStudyData {
   coverImage?: string
   showcaseImage?: string
   sections: CaseSection[]
-  screens: CaseScreen[]
+  screens?: CaseScreen[]
   bullets: string[]
+  galleryImages?: string[]
+
 }
 
 // ─────────────────────────────────────────────
@@ -51,7 +79,7 @@ export const projects: Project[] = [
   {
     slug: 'art-detective',
     title: 'Art Detective',
-    tags: 'UX/UI · Motion',
+    tags: 'UX/UI · iOS Design',
     year: '2025',
     placeholder: 'Art Detective cover',
     coverImage: '/images/art-detective-final.png',
@@ -67,7 +95,7 @@ export const projects: Project[] = [
   {
     slug: 'data-visualization',
     title: 'Interactive Data Visualization',
-    tags: 'Visual · Data',
+    tags: 'UX Design · Data Viz',
     year: '2023',
     placeholder: 'Data Viz cover',
     coverImage: '/images/trend-radar-final.png',
@@ -96,12 +124,23 @@ export const caseStudyData: Record<string, CaseStudyData> = {
     sections: [
       {
         label: 'Context',
-        body: 'How do you build something a 4-6 year old can use completely on their own? Efteling wanted an AI-powered storytelling experience, but the real design challenge was not the AI. It was designing for a user who cannot type, has a short attention span, and is still developing fine motor skills.',
+        highlight: 'How do you build something a 4-6 year old can use completely on their own?',
+        body: 'Efteling wanted an AI-powered storytelling experience, but the real design challenge was not the AI. It was designing for a user who cannot type, has a short attention span, and is still developing fine motor skills.',
       },
       {
         label: 'Research',
-        body: 'We ran interviews with both out primary and secondary target audiences - children and parents - to understand what exactly kids do on their phones, what is their screentime limit (if such) generally understand the interaction model of a child with their phone. As a result, I built an empathy map to get past assumptions. Two findings drove the whole design direction:\n\n• Kids in this age group can reliably type, so any product asking them to type would fail before it started\n• Existing kids\' apps that worked shared four things: dead-simple navigation, oversized touch targets, voice-over narration, and unmistakable feedback when something\'s tapped',
-        sectionImage: '/images/HMW-ArtDetective.png',
+        body: 'We ran interviews with both out primary and secondary target audiences - children and parents - to understand what exactly kids do on their phones, what is their screentime limit (if such) generally understand the interaction model of a child with their phone. As a result, I built an empathy map to get past assumptions. Two findings drove the whole design direction:',
+        
+        subsections: [
+          {
+          subtitle: 'Literacy levels',
+          subtitleBody: 'Kids in this age group can\'t reliably type, so any product asking them to type would fail before it started',
+          },
+          {
+          subtitle: 'Benchmark',
+          subtitleBody: 'Existing kids\' apps that worked shared four things: dead-simple navigation, oversized touch targets, voice-over narration, and unmistakable feedback when something\'s tapped',
+          },
+        ],
       },
       {
         label: 'Process',
@@ -146,9 +185,9 @@ export const caseStudyData: Record<string, CaseStudyData> = {
 
   // ── Art Detective ────────────────────────────────────────────────────────
   'art-detective': {
-    heroLabels: ['UX/UI', 'Front-end'],
+    heroLabels: ['UX/UI', 'iOS Design/Development'],
     heroTitle: 'Art Detective',
-    role: 'UX/UI Design & Front-end',
+    role: 'UX/UI Design & iOS Design and Development',
     team: 'Duo Project',
     year: '2024',
     coverImage: '/images/art-detective-final.png',
@@ -159,12 +198,36 @@ export const caseStudyData: Record<string, CaseStudyData> = {
     sections: [
       {
         label: 'Context',
-        body: 'Assigned as a short sprint project. The task: design a mobile iOS app that lets users identify and learn about artworks using image recognition - essentially Shazam for art. A 2-week rapid sprint covering brainstorming, prototyping, and development. The goal was a working core concept, no add-on features. The result: Rijksmuseum Art Detective. Designed for adolescents, specifically to bridge the gap in art history knowledge by making museum exploration feel like a social-media experience they are already familiar with. The app is built for use in crowded spaces like museum floors, so speed and simplicity mattered more than depth',
+        highlight: 'Learn about artworks using image recognition - essentially Shazam for art. ',
+        body: 'Assigned as a short sprint project. The task: design a mobile iOS app that lets users identify and learn about art. A 2-week rapid sprint covering brainstorming, prototyping, and development. The goal was a working core concept, no add-on features. The result: Rijksmuseum Art Detective. Designed for adolescents, specifically to bridge the gap in art history knowledge by making museum exploration feel like a social-media experience they are already familiar with. The app is built for use in crowded spaces like museum floors, so speed and simplicity mattered more than depth',
       },
       {
         label: 'Research',
         body: 'Mapped the competitive landscape, including AR/VR apps, virtual museum tours, and web-based applications, to identify gaps and overlaps. In parallel, ran "How Might We" workshops to reframe the problem around technical constraints, legal considerations, and creative direction.',
-        sectionImage: '/images/HMW-ArtDetective.png'
+        subsections: 
+        [
+          {
+          subtitleSecondary: 'How Might We...',
+          },
+        ],
+         findings: [
+          {
+          number: '01',
+          title: 'Create an image recognition tool and method can we use?', 
+          body:'Integrate Google image recognition API to detect the artwork.',
+        },
+          {
+          number: '02',
+          title: 'Keep our users curious when scanning an artwork?', 
+          body:'Add visual effects to the painting as an overlay or \"Did you know..?\" pop-ups. Overlay the artwork\'s original setting fresco in it\'s historic context using AR',
+        },
+        {
+          number: '03',
+          title: 'Protect users\' privacy?', 
+          body:'Integrate Google image recognition API to detect the artwork.',
+        },
+      ],
+      FindingColor: '#f3ead5'
       },
       {
         label: 'Process',
@@ -210,7 +273,7 @@ export const caseStudyData: Record<string, CaseStudyData> = {
   'vr-learning': {
     heroLabels: ['User Research', 'Prototyping', 'Virtual Reality'],
     heroTitle: 'Multiplayer VR Learning on the Construction Site',
-    role: 'User Experience and Research, VR Interface Designer',
+    role: 'User Experience Design and UX Research',
     team: 'Back-end and Full-Stack Engineers, in collaboration with Heijmans.',
     showcaseImage: '/images/HeijmansDemo (2).png',
     year: '2026',
@@ -220,17 +283,59 @@ export const caseStudyData: Record<string, CaseStudyData> = {
     sections: [
       {
         label: 'Context',
-        body: 'Communication is important on the jobsite, especially for preventing dangerous accidents from happening. But communication within the team is difficult, especially with cultural differences. This may relate to hierarchy, uncertainty, social pressure or simply a lack of practice. This project is used as a proof-of-concept to test if there is a way to encourage coworkers to communicate despite those hurdles.',
+        highlight: 'Communication is important on the jobsite, especially for preventing dangerous accidents from happening.',
+        body: 'But communication within the team is difficult, especially with cultural differences. This may relate to hierarchy, uncertainty, social pressure or simply a lack of practice. This project is used as a proof-of-concept to test if there is a way to encourage coworkers to communicate despite those hurdles.',
       },
       {
         label: 'Research',
-        body: 'Started from a behavioral research report on Dutch and international construction workers (CBS, TNO, Bouwend Nederland), which gave me early insight on motivation, risk attitude, digital literacy, and hierarchy across worker types. Validated those hypotheses with an expert interview with a safety coordinator at Heijmans. He confirmed: subcontractors feel disconnected from the core team, fear of being called a "zeikerd" (crybabies) stops people from speaking up\, language barriers with foreign workers are a live problem, and how you address someone changes whether safety messaging actually lands.Combined both inputs into three personas:\n Jan de Vries - veteran Dutch foreman, 47, direct Heijmans employee, informal norm-setter on site \n Daan Visser - Dutch newcomer, 22, 4 months in, MBO Bouw background, mirrors senior behavior to earn acceptance \n ' 
+        body: 'Started from a behavioral research report on Dutch and international construction workers (CBS, TNO, Bouwend Nederland), which gave me early insight on motivation, risk attitude, digital literacy, and hierarchy across worker types. Validated those hypotheses with an expert interview with a safety coordinator at Heijmans. He confirmed: subcontractors feel disconnected from the core team, fear of being called a "zeikerd" (crybabies) stops people from speaking up\, language barriers with foreign workers are a live problem, and how you address someone changes whether safety messaging actually lands.Combined both inputs into three personas:',
+        subsections: [
+          {
+          subtitleSecondary: 'target personas',
+          subtitleBody: 'Jan de Vries - veteran Dutch foreman, 47, direct Heijmans employee, informal norm-setter on site \n Daan Visser - Dutch newcomer, 22, 4 months in, MBO Bouw background, mirrors senior behavior to earn acceptance \n ',
+          },
+        ],
+        personas: [
+        {
+          name: 'Jan de Vries',
+          meta: '47 · veteran Dutch foreman · direct employee',
+          description: 'Values safety deeply but rationalizes risk through experience - "nothing has gone wrong yet" becomes a mental shortcut of its own.',
+          image: '/images/JanPersona.png',
+        },
+        {
+          name: 'Bogdan Ivanov',
+          meta: '34 · General Worker · International subcontractor',
+          description: 'Higher power-distance background means he rarely questions a supervisor\'s decision. Language barriers in the VR interface are a real obstacle',
+          image: '/images/BogdanPerson.png',
+        },
+        {
+          name: 'Daan Visser',
+          meta: '34 · Newcomer · Direct employee',
+          description: 'Team loyalty vs. speaking up - wants to flag unsafe situations but fears looking weak, inexperienced, or disloyal to the crew.',
+          image: '/images/DaanPersona.png',
+
+        },
+      ],
       },
       {
-        label: 'Research Questions',
-        subtitle: 'What factors influence construction workers\' willingness to speak up on a construction site?',
-        body:'  How can different accidents happen on a construction site?How are the safety issues currently addressed on the Heijmans sites? How are the safety issues currently addressed at competitors? What multiplayer framework is best for easily setting up VR multiplayer games in Unity?',
-      },
+  label: 'Research Questions',
+  body: '',
+  subsections: [
+    {
+      subtitle: "What factors influence construction workers' willingness to speak up on a construction site?",
+      subtitleBody: 'Construction workers’ willingness to speak up is shaped by psychological safety, workplace hierarchy, team culture, communication quality, time pressure, leadership, and safety awareness. Workers are more likely to intervene when they feel supported, trust their supervisors, and can practise proactive communication in a safe environment.'
+    },
+    {subtitle: 'How are the safety issues currently addressed on the Heijmans sites vs. competitor\'s sites?', 
+      subtitleBody: 'Heijmans addresses safety through its GO! programme, which combines a mobile reporting app, pre-task risk self-checks (LMRA), daily safety conversations supported by GO! Coaches, and a three-step card system for unsafe behaviour. More broadly, construction companies use clear safety rules, reporting processes, accountability measures, emergency-response requirements, and the involvement of workers and subcontractors to build a proactive safety culture.',
+    },
+    {
+      subtitle: 'How can different accidents happen on a construction site?',
+      subtitleBody: 'Construction site accidents often result from a combination of human error, unsafe conditions, poor communication, and inadequate safety management. These factors can lead to falls, equipment and maintenance incidents, highlighting the need for clearer communication and more effective safety training, including VR-based learning.',
+    },
+  ]
+},
+
+  
       {
         label: 'Key Decisions',
         body: 'Replace with your key decisions text.',
@@ -239,32 +344,6 @@ export const caseStudyData: Record<string, CaseStudyData> = {
         label: 'Outcome / Reflection',
         body: 'Replace with your outcome / reflection text.',
         sectionImage: '/images/HeijmansDemo (1).png'
-      },
-    ],
-    screens: [
-      {
-        title: 'Environment Overview',
-        text: 'Replace with screen description.',
-        placeholder: 'VR Learning — Screen 1',
-        image: 'images/HeijmansDemo (2).png'
-      },
-      {
-        title: 'Multiplayer Interaction',
-        text: 'Replace with screen description.',
-        placeholder: 'VR Learning — Screen 2',
-        image: '', // ← '/images/vr-screen-2.png'
-      },
-      {
-        title: 'Task / Scenario',
-        text: 'Replace with screen description.',
-        placeholder: 'VR Learning — Screen 3',
-        image: '', // ← '/images/vr-screen-3.png'
-      },
-      {
-        title: 'Debrief / Results',
-        text: 'Replace with screen description.',
-        placeholder: 'VR Learning — Screen 4',
-        image: '', // ← '/images/vr-screen-4.png'
       },
     ],
     bullets: [
@@ -285,51 +364,96 @@ export const caseStudyData: Record<string, CaseStudyData> = {
     sections: [
       {
         label: 'Context',
-        body: 'Replace with your context text.',
+        body: 'Industry project for Vanderlande, solving how to display trend radar data in an interactive, easy-to-understand way that works for both internal and external audiences. Final deliverables: an iOS app and a website. Team ran Scrum across four sprints: Research, Design & Iteration, Development, and Final Polish.',
       },
       {
         label: 'Research',
-        body: 'Replace with your research text.',
+        body: 'Ran user research and persona work to understand both audiences, mapped the funnel journey, and benchmarked existing trend radar tools and data viz patterns to see what conventions already existed.',
+        subsections: [
+        {
+          subtitleSecondary: 'Tool\'s core purposes',
+        }
+        ],
+        findings: [
+          {
+          number: '01',
+          title: 'Informs employees of upcoming shifts', 
+          body:'Flags upcoming technological shifts worth tracking allowing employee to expand their skillset and stay current.',
+        },
+                {
+          number: '02',
+          title: 'Shows factors affecting company performance', 
+          body:'Maps the specific factors influencing company performance, which feeds directly into investment and innovation decisions.',
+        },
+                {
+          number: '03',
+          title: 'Demonstrates readiness to potential clients', 
+          body:'It doubles as a communication asset: proof that Vanderlande is actively tracking and adapting to emerging trends, which matters more to a prospect evaluating long-term reliability than the raw trend data itself.',
+        },
+      ],
       },
       {
         label: 'Process',
-        body: 'Replace with your process text.',
+        body: 'Two distinct groups with different mental models going in.',
+          subsections: [
+          {
+            subtitleSecondary: 'Target Personas',
+            subtitleBody:'Internal employees, who use the trend radar to track upcoming technologies and how they might affect company positioning. External clients, who use it to assess whether Vanderlande is staying ahead of emerging tech. ',
+          },
+        ],
+
+        personas: [
+          {
+          name: 'James Henderson',
+          meta: '39 · External User · CEO',
+          description: 'Less concerned with the trend data itself and more focused on outcomes, case studies, ROI, and profitability, using the tool to gauge whether Vanderlande is a credible long-term partner.',
+          
+          }, 
+          {
+          name: 'Chrissy Daniels',
+          meta: '32 · Internal Employee · Department Head',
+          description: 'Uses the tool to track technological advancements, guide skill development, and support high-stakes decisions like whether to invest in a department or innovation direction.',
+          }
+        ],
+        personaColor:  'linear-gradient(135deg, #feba001a 0%, #c16a00 100%)',
       },
       {
-        label: 'Key Decisions',
-        body: 'Replace with your key decisions text.',
+        label: 'Prototype',
+        body: 'Once defined, I started wireframing',
+        sectionImage: '/images/wireframesVanderlande.png',
+      },
+      {
+        label: 'User Testing',
+        // subsections: [
+        //   {
+        //     subtitle: 'Internal users already had an established mental model of what a trend radar is, external users mostly didn\'t, which shaped how we tested',
+        //   },
+        // ],
+        body: 'Ran two rounds of usability testing, mostly with students unaffiliated with the project. In Figma, I built frames showing a trend radar with one trend selected, and asked participants three questions directly on the screen: what\'s the impact level, what\'s the expected adoption time, what\'s the trend type. Sequence order was alternated across participants to control for a learning effect between the four concepts (three circular, one scatter bubble)',
+        // sectionImage: '/images/radarBases.png',
+       subsections: [
+          {
+            subtitle: 'Key insights',
+            subtitleBullets: [
+              'Dense legends and complex filters (Concepts 1 and 2) slowed comprehension significantly.',
+              'A recurring misread: users judged impact and adoption time by how many dots clustered in a section rather than the position of the specific dot, meaning a crowded quadrant was misread as "the answer" even when the relevant dot sat elsewhere.',
+              "The scatter bubble concept performed best with users who had no prior context, likely because it's a familiar chart type.",
+              "Once users understood what a trend radar was for, Concept 4's less conventional layout outperformed everything else, both in speed and accuracy.",
+            ],
+            },
+        ],
+      
       },
       {
         label: 'Outcome / Reflection',
         body: 'Replace with your outcome / reflection text.',
       },
+      
     ],
-    screens: [
-      {
-        title: 'Radar Overview',
-        text: 'Replace with screen description.',
-        placeholder: 'Data Viz — Screen 1',
-        image: '', // ← '/images/dataviz-screen-1.png'
-      },
-      {
-        title: 'Trend Detail',
-        text: 'Replace with screen description.',
-        placeholder: 'Data Viz — Screen 2',
-        image: '', // ← '/images/dataviz-screen-2.png'
-      },
-      {
-        title: 'Filter / Explore',
-        text: 'Replace with screen description.',
-        placeholder: 'Data Viz — Screen 3',
-        image: '', // ← '/images/dataviz-screen-3.png'
-      },
-      {
-        title: 'Expert vs Naïve View',
-        text: 'Replace with screen description.',
-        placeholder: 'Data Viz — Screen 4',
-        image: '', // ← '/images/dataviz-screen-4.png'
-      },
-    ],
+    galleryImages: ['/images/r1.png', '/images/r2.png', '/images/r3.png', '/images/r4.png', '/images/r5.png', '/images/r6.png', '/images/r7.png', ],
+
+      
+
     bullets: [
       'Replace with takeaway or highlight.',
       'Replace with takeaway or highlight.',

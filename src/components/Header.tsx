@@ -36,7 +36,7 @@ export default function Header() {
         }}
       >
         <Link to="/visual-work" className="nav-link">Visual Work</Link>
-        <a href="#" className="nav-link">CV</a>
+        <a href="https://drive.google.com/file/d/1Bw6KsIja4QVWN7ReXn3Al6SilwGo74yQ/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="nav-link">CV</a>
         <a href="https://www.linkedin.com/in/magda-tsekova" target="_blank" rel="noopener noreferrer" className="nav-link">
           LinkedIn
         </a>
