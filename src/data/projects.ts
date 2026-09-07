@@ -25,6 +25,8 @@ export interface CaseSection {
   FindingColor?: string
   highlight?: string
   findings?: Finding[]
+  fullBleedImage?: string
+  fullBleedDescription?: string
 }
 
 export interface Persona {
@@ -131,16 +133,20 @@ export const caseStudyData: Record<string, CaseStudyData> = {
         label: 'Research',
         body: 'We ran interviews with both out primary and secondary target audiences - children and parents - to understand what exactly kids do on their phones, what is their screentime limit (if such) generally understand the interaction model of a child with their phone. As a result, I built an empathy map to get past assumptions. Two findings drove the whole design direction:',
         
-        subsections: [
+        findings: [
           {
-          subtitle: 'Literacy levels',
-          subtitleBody: 'Kids in this age group can\'t reliably type, so any product asking them to type would fail before it started',
+          number: '01',
+          title: 'Literacy levels',
+          body: 'Kids in this age group can\'t reliably type, so any product asking them to type would fail before it started',
           },
           {
-          subtitle: 'Benchmark',
-          subtitleBody: 'Existing kids\' apps that worked shared four things: dead-simple navigation, oversized touch targets, voice-over narration, and unmistakable feedback when something\'s tapped',
+          number: '02',
+          title: 'Benchmark',
+          body: 'Existing kids\' apps that worked shared four things: dead-simple navigation, oversized touch targets, voice-over narration, and unmistakable feedback when something\'s tapped',
           },
+      
         ],
+        FindingColor: '#b70303',
       },
       {
         label: 'Process',
@@ -236,7 +242,12 @@ export const caseStudyData: Record<string, CaseStudyData> = {
       },
       {
         label: 'Outcome / Reflection',
-        body: 'Shipped a working MVP with three core screens: Homescreen, Scanner, and an info overlay for the scanned artwork. Tested with university students with no navigation issues found. The concept held up well as a proof-of-concept. With more time, I\'d push the social-media angle further, something like a face-swap feature layered onto scanned artworks, turning a museum visit into something you experience and share with a friend in real time, rather than a solo scan-and-read loop.',
+        body: 'Shipped a working MVP with three core screens: Homescreen, Scanner, and an info overlay for the scanned artwork. Tested with university students with no navigation issues found. The concept held up well as a proof-of-concept.',
+        subsections: [{
+          subtitleSecondary: 'With more time,',
+          subtitleBody: ' I\'d push the social-media angle further, something like a face-swap feature layered onto scanned artworks, turning a museum visit into something you experience and share with a friend in real time, rather than a solo scan-and-read loop.',
+        }]
+         ,
       },
     ],
     screens: [
@@ -254,7 +265,7 @@ export const caseStudyData: Record<string, CaseStudyData> = {
       },
       {
         title: 'Scan in progress',
-        text: 'Scanner screen with bouding box as a cue.',
+        text: 'Scanner screen with a bouding box as a visual cue.',
         placeholder: 'Art Detective — Screen 3',
         image: '/images/Scanner.png'
       },
@@ -273,7 +284,7 @@ export const caseStudyData: Record<string, CaseStudyData> = {
   'vr-learning': {
     heroLabels: ['User Research', 'Prototyping', 'Virtual Reality'],
     heroTitle: 'Multiplayer VR Learning on the Construction Site',
-    role: 'User Experience Design and UX Research',
+    role: 'UX Design and Research',
     team: 'Back-end and Full-Stack Engineers, in collaboration with Heijmans.',
     showcaseImage: '/images/HeijmansDemo (2).png',
     year: '2026',
@@ -335,26 +346,43 @@ export const caseStudyData: Record<string, CaseStudyData> = {
   ]
 },
 
-  
       {
-        label: 'Key Decisions',
-        body: 'Replace with your key decisions text.',
+        label: 'from Insights to game flow ',
+        body: 'The interaction and game flow was designed as a two-player structure where each player runs their own task and each task has a hidden danger, but the danger is only visible to the other player. Neither player can solve the situation alone. The interaction only resolves if someone says something out loud.',
+        subsections: [{
+          subtitleSecondary: "Key insights that shaped the concept",
+        },
+      ],
+        findings: [{
+          number: '01',
+          title: 'Visual cues are worded informative, not corrective',
+          body: 'Something like "seems like your colleague might be in danger" instead of a warning tone. This serves two personas at once: it avoids the "crybaby" branding risk for subcontractors and newer workers, and it avoids reading as a challenge to Jan\'s (Persona 1) authority.' ,
+        },
+        {
+          number: '02',
+          title: 'The two dangers are staggered in time, not simultaneous.',
+          body: 'If both players hit their danger moment at once, you get two people talking over each other, which kills the communication dynamic rather than practicing it.' ,
+        },
+        {
+          number: '03',
+          title: 'The underrates role of the training facilitator.',
+          body: 'Though the training facilitator isn\'t in the VR interaction, they frame it before (setting scene, introducing the voice mechanic) and close it after (shared debrief). So the system was never designed as "two players alone in VR," it\'s built around a human facilitator who brackets the experience without being inside it.' ,
+        }
+      ],
+        FindingColor: '#FEB900',
       },
       {
         label: 'Outcome / Reflection',
-        body: 'Replace with your outcome / reflection text.',
-        sectionImage: '/images/HeijmansDemo (1).png'
+        body: 'A multiplayer VR prototype built for Meta Quest, where two participants take on roles within the same scenario. Each player runs an individual task while the system tracks whether they notice and respond to their co-worker\'s hidden hazard, surfacing informative cues and time-based hints when needed.',
       },
-    ],
-    bullets: [
     ],
   },
 
   // ── Interactive Data Visualization ──────────────────────────────────────
   'data-visualization': {
-    heroLabels: ['Visual', 'Data'],
+    heroLabels: ['User Testing', 'Data Visualization'],
     heroTitle: 'Interactive Data Visualization',
-    role: 'Visual Design & Data',
+    role: 'Research, Visual Design & User Testing',
     team: 'Group Project for Vanderlande',
     year: '2023',
     coverImage: '/images/trend-radar-final.png',
@@ -364,7 +392,8 @@ export const caseStudyData: Record<string, CaseStudyData> = {
     sections: [
       {
         label: 'Context',
-        body: 'Industry project for Vanderlande, solving how to display trend radar data in an interactive, easy-to-understand way that works for both internal and external audiences. Final deliverables: an iOS app and a website. Team ran Scrum across four sprints: Research, Design & Iteration, Development, and Final Polish.',
+        highlight: 'A trend radar is a visualization tool that displays emerging trends by impact level and expected adoption time, giving teams a quick read on what\'s coming and when to act on it.',
+        body: 'Our task? - Solving how to display trend radar data in an interactive, easy-to-understand way that works for both internal and external audiences. Final deliverables: both an iOS mobile app and a web platform. Team ran Scrum across four sprints: Research, Design & Iteration, Development, and Final Polish.',
       },
       {
         label: 'Research',
@@ -394,7 +423,7 @@ export const caseStudyData: Record<string, CaseStudyData> = {
       },
       {
         label: 'Process',
-        body: 'Two distinct groups with different mental models going in.',
+        body: 'Two distinct groups with different mental models going in. Internal users already had an established mental model of what a trend radar is, external users mostly didn\'t, which shaped how we tested.',
           subsections: [
           {
             subtitleSecondary: 'Target Personas',
@@ -407,38 +436,33 @@ export const caseStudyData: Record<string, CaseStudyData> = {
           name: 'James Henderson',
           meta: '39 · External User · CEO',
           description: 'Less concerned with the trend data itself and more focused on outcomes, case studies, ROI, and profitability, using the tool to gauge whether Vanderlande is a credible long-term partner.',
-          
+          image: '/images/VandPersona2.png',
           }, 
           {
           name: 'Chrissy Daniels',
           meta: '32 · Internal Employee · Department Head',
           description: 'Uses the tool to track technological advancements, guide skill development, and support high-stakes decisions like whether to invest in a department or innovation direction.',
+          image: '/images/VandPersona1.png',
           }
         ],
         personaColor:  'linear-gradient(135deg, #feba001a 0%, #c16a00 100%)',
       },
       {
         label: 'Prototype',
-        body: 'Once defined, I started wireframing',
-        sectionImage: '/images/wireframesVanderlande.png',
+        body: 'After analysing the research findings and existing solutions, I began sketching several potential directions. For each one, I experimented with different structures, groupings, segment sizes, and shapes. After multiple iterations and brainstorming sessions, my team and I identified four promising concepts.',
+        fullBleedImage: '/images/wireframesVanderlande.png',
       },
       {
         label: 'User Testing',
-        // subsections: [
-        //   {
-        //     subtitle: 'Internal users already had an established mental model of what a trend radar is, external users mostly didn\'t, which shaped how we tested',
-        //   },
-        // ],
         body: 'Ran two rounds of usability testing, mostly with students unaffiliated with the project. In Figma, I built frames showing a trend radar with one trend selected, and asked participants three questions directly on the screen: what\'s the impact level, what\'s the expected adoption time, what\'s the trend type. Sequence order was alternated across participants to control for a learning effect between the four concepts (three circular, one scatter bubble)',
-        // sectionImage: '/images/radarBases.png',
        subsections: [
           {
             subtitle: 'Key insights',
             subtitleBullets: [
               'Dense legends and complex filters (Concepts 1 and 2) slowed comprehension significantly.',
               'A recurring misread: users judged impact and adoption time by how many dots clustered in a section rather than the position of the specific dot, meaning a crowded quadrant was misread as "the answer" even when the relevant dot sat elsewhere.',
-              "The scatter bubble concept performed best with users who had no prior context, likely because it's a familiar chart type.",
-              "Once users understood what a trend radar was for, Concept 4's less conventional layout outperformed everything else, both in speed and accuracy.",
+              "Once users understood what a trend radar was for, Concept 3's less conventional layout outperformed everything else, both in speed and accuracy.",
+              "The scatter bubble (Concept 4) performed best with users who had no prior context, likely because it's a familiar chart type.",
             ],
             },
         ],
@@ -446,20 +470,16 @@ export const caseStudyData: Record<string, CaseStudyData> = {
       },
       {
         label: 'Outcome / Reflection',
-        body: 'Replace with your outcome / reflection text.',
+        body: 'Concept 3 was built into a fully working iOS app and web platform, with SQL replacing placeholder data with live trend data. I focused on the mobile experience, merging the list and radar views into a single interface and developing the filter logic that lets users narrow trends by category and timeframe.',
       },
-      
     ],
     galleryImages: ['/images/r1.png', '/images/r2.png', '/images/r3.png', '/images/r4.png', '/images/r5.png', '/images/r6.png', '/images/r7.png', ],
 
       
 
     bullets: [
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
-      'Replace with takeaway or highlight.',
+      'Enlarged the shape representing each trend on the canvas to make it more visually prominent.',
+      'Added a fade effect on unselected shapes when one is clicked, drawing focus to the selected trend, paired with a subtle pulse animation to reinforce the selection.',
     ],
   },
 }

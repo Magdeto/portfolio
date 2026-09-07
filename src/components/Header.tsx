@@ -5,18 +5,19 @@ export default function Header() {
   const isMobile = useIsMobile()
 
   return (
-    <header
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: isMobile ? '16px 20px' : '24px 44px',
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        fontFamily: 'Unbounded',
-      }}
-    >
+<header
+  className="site-header"
+  style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: isMobile ? '16px 20px' : '24px 44px',
+    position: 'sticky',
+    top: 0,
+    zIndex: 50,
+    fontFamily: 'Unbounded',
+  }}
+>
       <Link to="/" className="logo-link" style={{ display: 'inline-flex' }}>
         <img
           src="/images/watermark-logo.svg"

@@ -70,6 +70,30 @@ img {
   display: block;
   max-width: 100%;
 }
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(2px);
+  mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+}
+
+.site-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.2) 60%, transparent 100%);
+}
 
 /* Case study sections — centered at wide viewports, 44px minimum */
 .cs-padded {
@@ -81,6 +105,34 @@ img {
     padding-left: 24px;
     padding-right: 24px;
   }
+}
+
+/* Case study — hero title word-reveal + fade-in for surrounding elements */
+@keyframes cs-word-up {
+  from { transform: translateY(110%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes cs-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cs-hero-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  margin-right: 0.28em;
+}
+
+.cs-hero-word {
+  display: inline-block;
+  opacity: 0;
+  animation: cs-word-up 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.cs-hero-fade {
+  opacity: 0;
+  animation: cs-fade-in 0.9s ease forwards;
 }
 
 /* Project card — no lift, no fade, gradient reveal only. Hover-only: real pointer devices. */
@@ -117,4 +169,28 @@ img {
 }
 .cs-screens-scroll::-webkit-scrollbar {
   display: none;
+}
+
+.project-nav-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.project-nav-link--previous:hover .project-nav-arrow {
+  transform: translateX(-6px);
+}
+
+.project-nav-link--next:hover .project-nav-arrow {
+  transform: translateX(6px);
+}
+
+.footer {
+  background: #000000 !important;
+  color: #ffffff !important;
+  transition: background-color 2s ease, color 2s ease;
+}
+
+.footer.footer-visible {
+  background: #ffffff !important;
+  color: #000000 !important;
 }

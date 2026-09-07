@@ -1,14 +1,35 @@
 import { useIsMobile } from '../hooks/useIsMobile'
+import { useEffect, useRef } from 'react'
 
 export default function Footer() {
   const isMobile = useIsMobile()
+  const footerRef = useRef<HTMLElement>(null)
 
+  useEffect(() => {
+    const footer = footerRef.current
+    if (!footer) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          footer.classList.add('footer-visible')
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    observer.observe(footer)
+
+    return () => observer.disconnect()
+  }, [])
   return (
     <footer
+      ref={footerRef}
+      className="footer"
       style={{
         fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
         background: '#ffffff',
-        color: '#000000',
+        // color: '#000000',
         minHeight: '100vh',
         padding: isMobile ? '48px 24px 26px' : '56px 44px 26px',
         display: 'flex',
