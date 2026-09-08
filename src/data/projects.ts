@@ -60,7 +60,7 @@ export interface CaseStudyData {
   showcaseImage?: string
   sections: CaseSection[]
   screens?: CaseScreen[]
-  bullets: string[]
+  bullets?: string[]
   galleryImages?: string[]
 
 }
